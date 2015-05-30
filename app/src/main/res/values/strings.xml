@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">tp_final</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="app_title">WiFi Easy Transfer</string>
+    <string name="action_settings">Settings</string>
+</resources>
