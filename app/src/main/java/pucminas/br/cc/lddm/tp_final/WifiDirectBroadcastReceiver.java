@@ -1,25 +1,26 @@
 package pucminas.br.cc.lddm.tp_final;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 import android.widget.ListView;
 
 import java.util.Collection;
 
-public class WifiDirectManager extends BroadcastReceiver {
+public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 
     private WifiP2pManager mManager;
     private WifiP2pManager.Channel mChannel;
-    private Context mContext;
+    private MainActivity mContext;
     private ListView mList;
 
-
-    public WifiDirectManager(WifiP2pManager manager, WifiP2pManager.Channel channel, Context context, ListView list) {
+    public WifiDirectBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, MainActivity context, ListView list) {
         super();
         this.mManager = manager;
         this.mChannel = channel;
@@ -44,7 +45,7 @@ public class WifiDirectManager extends BroadcastReceiver {
                 @Override
                 public void onPeersAvailable(WifiP2pDeviceList wifiP2pDeviceList) {
                     Collection<WifiP2pDevice> ll = wifiP2pDeviceList.getDeviceList();
-                    UserAdapter adapter = new UserAdapter(mContext, ll);
+                    UserListAdapter adapter = new UserListAdapter(mContext, ll);
                     Log.v("Wp2p", "new peer: " + ll.size());
                     mList.setAdapter(adapter);
                     mList.setOnItemClickListener(adapter);
@@ -52,7 +53,6 @@ public class WifiDirectManager extends BroadcastReceiver {
             });
 
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
-
             Log.v("Wp2p", "WIFI_P2P_CONNECTION_CHANGED_ACTION");
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
@@ -61,4 +61,5 @@ public class WifiDirectManager extends BroadcastReceiver {
 
         }
     }
+
 }
