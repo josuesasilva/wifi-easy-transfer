@@ -27,7 +27,7 @@ public class ClientService extends IntentService {
 
     private int port;
     private File fileToSend;
-    private WifiP2pDevice device;
+    private String address;
 
 
     public ClientService() {
@@ -37,60 +37,59 @@ public class ClientService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        port = ((Integer) intent.getExtras().get("port")).intValue();
-        fileToSend = (File) intent.getExtras().get("file");
-        device = (WifiP2pDevice) intent.getExtras().get("device");
+        port = (Integer) intent.getExtras().get("port");
+        //fileToSend = (File) intent.getExtras().get("file");
+        address = (String) intent.getExtras().get("address");
 
-
-        Socket clientSocket = null;
+        Socket clientSocket = new Socket();
         OutputStream os = null;
 
         try {
-            clientSocket = new Socket();
             clientSocket.bind(null);
-            clientSocket.connect((new InetSocketAddress(device.deviceAddress, port)), 500);
+            clientSocket.connect((new InetSocketAddress(address, port)), 5000);
 
-            PrintWriter pw = new PrintWriter(os);
-
-            InputStream is = clientSocket.getInputStream();
-
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
-
-            FileInputStream fis = new FileInputStream(fileToSend);
-            BufferedInputStream bis = new BufferedInputStream(fis);
-
-            byte[] buffer = new byte[4096];
-
-            Log.v("Wp2p", "Uploading file...");
-            while (true) {
-
-                int bytesRead = bis.read(buffer, 0, buffer.length);
-
-                if (bytesRead == -1) {
-                    break;
-                }
-
-                os.write(buffer, 0, bytesRead);
-                os.flush();
-            }
-
-            fis.close();
-            bis.close();
-
-            br.close();
-            isr.close();
-            is.close();
-
-            pw.close();
-            os.close();
+//            PrintWriter pw = new PrintWriter(os);
+//
+//            InputStream is = clientSocket.getInputStream();
+//
+//            InputStreamReader isr = new InputStreamReader(is);
+//            BufferedReader br = new BufferedReader(isr);
+//
+//            FileInputStream fis = new FileInputStream(fileToSend);
+//            BufferedInputStream bis = new BufferedInputStream(fis);
+//
+//            byte[] buffer = new byte[4096];
+//
+//            Log.d("Wp2p", "Uploading file...");
+//            while (true) {
+//
+//                int bytesRead = bis.read(buffer, 0, buffer.length);
+//
+//                if (bytesRead == -1) {
+//                    break;
+//                }
+//
+//                os.write(buffer, 0, bytesRead);
+//                os.flush();
+//            }
+//
+//            fis.close();
+//            bis.close();
+//
+//            br.close();
+//            isr.close();
+//            is.close();
+//
+//            pw.close();
+//            os.close();
 
             clientSocket.close();
 
-            Log.v("Wp2p", "File uploaded...");
+            Log.d("Wp2p", "File uploaded...");
 
         } catch (IOException e) {
-            Log.v("Wp2p", "Erro in Socket Client");
+            Log.d("Wp2p", "Erro in Socket Client");
+            Log.d("Wp2p", e.getMessage());
             e.printStackTrace();
         }
 

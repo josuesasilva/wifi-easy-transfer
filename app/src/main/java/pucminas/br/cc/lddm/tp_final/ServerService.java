@@ -36,13 +36,13 @@ public class ServerService extends IntentService {
         ServerSocket ss = null;
         Socket s = null;
 
-        Log.v("Wp2p", "Loading Sever..");
+        Log.d("Wp2p", "Loading Sever..");
         try {
             ss = new ServerSocket(port);
 
             // Listen for connections
             s = ss.accept();
-            Log.v("Wp2p", "Server wating for connections");
+            Log.d("Wp2p", "Server wating for connections");
 
             InputStream is = s.getInputStream();
             String saveAs = "wp2pfile" + System.currentTimeMillis();
@@ -54,7 +54,7 @@ public class ServerService extends IntentService {
             byte[] buffer = new byte[4096];
             int bytesRead;
 
-            Log.v("Wp2p", "Downloading file...");
+            Log.d("Wp2p", "Downloading file...");
             while(true) {
                 bytesRead = is.read(buffer, 0, buffer.length);
 
@@ -66,10 +66,11 @@ public class ServerService extends IntentService {
 
             bos.close();
             s.close();
-            Log.v("Wp2p", "Downloading complete...");
+            Log.d("Wp2p", "Downloading complete...");
 
         } catch (IOException e) {
-            Log.v("Wp2p", "Error in Socket Server");
+            Log.d("Wp2p", "Error in Socket Server");
+            Log.d("Wp2p", e.getMessage());
             e.printStackTrace();
         }
     }

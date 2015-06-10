@@ -70,13 +70,14 @@ public class UserListAdapter extends ArrayAdapter implements AdapterView.OnItemC
             WifiP2pDevice device = mUsers.get(position);
             Log.v("Wp2p", "click on " + position);
 
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            intent.setType("file/*");
+            //Intent intent = new Intent();
+            //intent.setAction(Intent.ACTION_GET_CONTENT);
+            //intent.setType("file/*");
 
             mContext.setDevice(device);
+            mContext.connect();
 
-            ((Activity) mContext).startActivityForResult(intent, 0);
+            //((Activity) mContext).startActivityForResult(intent, 0);
         }
     }
 }
