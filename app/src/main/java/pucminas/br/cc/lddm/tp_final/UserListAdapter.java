@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -70,14 +71,12 @@ public class UserListAdapter extends ArrayAdapter implements AdapterView.OnItemC
             WifiP2pDevice device = mUsers.get(position);
             Log.v("Wp2p", "click on " + position);
 
-            //Intent intent = new Intent();
-            //intent.setAction(Intent.ACTION_GET_CONTENT);
-            //intent.setType("file/*");
-
-            mContext.setDevice(device);
-            mContext.connect();
-
-            //((Activity) mContext).startActivityForResult(intent, 0);
+            if (mContext.hasConnection() == false || !device.equals(mContext.getmDevice())) {
+                mContext.setDevice(device);
+                mContext.connect();
+            } else {
+                Toast.makeText(mContext, "It is already connected!" , Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 package pucminas.br.cc.lddm.tp_final;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,6 +36,8 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 
     private Intent serverServiceIntent;
     private Intent clientServiceIntent;
+
+    private ProgressDialog progress;
 
     private final File DOWNLOAD_TARGET = getDir();
     private final int PORT = 8888;
@@ -91,6 +95,8 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
                 // We are connected with the other device, request connection
                 // info to find group owner IP
 
+                mContext.setConnection(true);
+
                 mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
                     @Override
                     public void onConnectionInfoAvailable(WifiP2pInfo info) {
@@ -109,6 +115,9 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 
                             mStatus.setText("This device is a Group Owner");
 
+                            progress = mContext.getProgress();
+                            if (progress != null) progress.dismiss();
+
                             Log.d("Wp2p", "Server works!");
                         } else if (info.groupFormed) {
                             // The other device acts as the client. In this case,
@@ -121,6 +130,11 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
                             clientServiceIntent.putExtra("port", PORT);
                             clientServiceIntent.putExtra("address", groupOwnerAddress.getHostAddress());
 
+                            if (mContext.getDataUri() != null)
+                                clientServiceIntent.putExtra("data", mContext.getDataUri().toString());
+                            else
+                                clientServiceIntent.putExtra("data", "-");
+
                             //Log.d("Wp2p", "File: " + f.getName());
                             Log.d("Wp2p", "Port: " + PORT);
                             Log.d("Wp2p", "Address: " + groupOwnerAddress.getHostAddress());
@@ -129,11 +143,20 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 
                             mStatus.setText("This device is a Client");
 
+                            progress = mContext.getProgress();
+                            if (progress != null) progress.dismiss();
+
+                            mContext.enableBtn();
+
                             Log.d("Wp2p", "Client start request.");
                         }
 
                     }
                 });
+            } else {
+                mStatus.setText("Not connected!");
+                mContext.setConnection(false);
+                mContext.disableBtn();
             }
 
 

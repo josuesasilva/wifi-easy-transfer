@@ -15,9 +15,19 @@
         android:background="#ff000000"
         android:textColor="#ffffffff" />
 
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/send_file"
+        android:id="@+id/sendFile"
+        android:layout_gravity="center_horizontal"
+        android:enabled="false" />
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/listView"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp" />
+
 </LinearLayout>

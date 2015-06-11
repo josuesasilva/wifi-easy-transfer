@@ -1,24 +1,31 @@
 package pucminas.br.cc.lddm.tp_final;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.File;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 
 public class MainActivity extends AppCompatActivity implements WifiP2pManager.ChannelListener {
@@ -27,13 +34,19 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
     private WifiP2pManager.Channel mChannel;
     private WifiP2pDevice mDevice;
 
-    private File mData;
+    private String mData;
+    private Uri mDataUri;
 
     private BroadcastReceiver mReceiver;
     private IntentFilter mIntentFilter;
 
+    private boolean hasConnection;
+
+    private ProgressDialog mProgress;
+
     @InjectView(R.id.listView) ListView listView;
     @InjectView(R.id.labelStatus) TextView status;
+    @InjectView(R.id.sendFile) Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
+        setConnection(false);
+
         discoverPeers();
     }
 
@@ -69,15 +84,40 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
         unregisterReceiver(mReceiver);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        setConnection(false);
+        disconnect();
+    }
+
+    @OnClick(R.id.sendFile)
+    public void submit(View view) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("file/*");
+        startActivityForResult(intent, 0);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        setData(data.getData().getPath());
-
-        connect();
-
+         // Make sure the request was successful
+         if (resultCode == RESULT_OK) {
+             setData(data.getData());
+             Log.d("Wp2p", data.getData().getPath());
+//             Uri dt = data.getData();
+//             File ft = new File(dt.getPath());
+//             String[] arrt = ft.getName().split(".");
+//             String ds = dt.toString() + "|" + arrt[arrt.length-1];
+//             Log.d("Wp2p", ds);
+//
+//             setData(ds);
+             connect();
+         } else {
+             return;
+         }
     }
 
     @Override
@@ -90,7 +130,9 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_disconnect) {
+            disconnect();
+            status.setText("Not Connected!");
             return true;
         } else if (id == R.id.action_refresh) {
             discoverPeers();
@@ -128,21 +170,60 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
         mDevice = device;
     }
 
-    public void setData(String path) {
-        mData = new File(path);
+    public WifiP2pDevice getmDevice() {
+        return mDevice;
     }
 
-    public File getData() {
+    public void setData(String data) {
+        mData = data;
+    }
+
+    public void setData(Uri data) {
+        mDataUri = data;
+    }
+
+    public String getData() {
         return mData;
     }
 
+    public Uri getDataUri() {
+        return mDataUri;
+    }
+
+    public void setConnection(boolean s) {
+        hasConnection = s;
+    }
+
+    public boolean hasConnection() {
+        return hasConnection;
+    }
+
+    public void setProgess() {
+        mProgress = ProgressDialog.show(this, "Synchronizing peers.", "Please wait.",true);
+    }
+
+    public ProgressDialog getProgress() {
+        return mProgress;
+    }
+
+    public void enableBtn() {
+        button.setEnabled(true);
+    }
+
+    public void disableBtn() {
+        button.setEnabled(false);
+    }
+
     public void connect() {
+
+        setProgess();
 
         WifiP2pDevice device = mDevice;
         WifiP2pConfig config = new WifiP2pConfig();
 
         config.deviceAddress = device.deviceAddress;
         config.wps.setup = WpsInfo.PBC;
+        config.groupOwnerIntent = 0;
 
         mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
 
@@ -158,6 +239,36 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
             }
         });
 
+    }
+
+    public void disconnect() {
+
+        if (mManager != null && mChannel != null) {
+
+            mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
+
+                @Override
+                public void onGroupInfoAvailable(WifiP2pGroup group) {
+                    if (group != null && mManager != null && mChannel != null && group.isGroupOwner()) {
+
+                        mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {
+
+                            @Override
+                            public void onSuccess() {
+                                Log.d("Wp2p", "removeGroup onSuccess -");
+                            }
+
+                            @Override
+                            public void onFailure(int reason) {
+                                Log.d("Wp2p", "removeGroup onFailure -" + reason);
+                            }
+                        });
+                    }
+                }
+
+            });
+
+        }
     }
 
 }

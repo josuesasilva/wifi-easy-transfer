@@ -51,8 +51,10 @@ public class ServerService extends IntentService {
             FileOutputStream fos = new FileOutputStream(file);
             BufferedOutputStream bos = new BufferedOutputStream(fos);
 
-            byte[] buffer = new byte[4096];
+            //byte[] buffer = new byte[4096];
+            byte[] buffer = new byte[1024];
             int bytesRead;
+            int c = 0;
 
             Log.d("Wp2p", "Downloading file...");
             while(true) {
@@ -62,6 +64,9 @@ public class ServerService extends IntentService {
 
                 bos.write(buffer, 0, bytesRead);
                 bos.flush();
+
+                c++;
+                Log.d("Wp2p", "write part -> "+c);
             }
 
             bos.close();
