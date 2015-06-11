@@ -1,0 +1,13 @@
+Informações a respeito do projeto:
+
+- Os arquivos baixados vão para a pasta "wifip2p" no cartão de memória ou na memória principal caso não possua cartão de memória.
+
+- Os arquivos serão salvos com nomes genericos pela dificuldade em transmitir o fluxo de dados com a extenção do arquivo. 
+
+- O nome do arquivo salvo deve estar no formato composto por "wifip2p" concatenado com a hora do sistema em milisegundos.
+
+- Dependendo do dispositivo será necessario reiniciar a aplicação ou até mesmo a conexão WiFi caso não consiga parear dois dispositivos.
+
+- Pode ser que por algum conflito ou alguma configuração do dispositivo não seja possível parear dois dispositivos.
+
+
