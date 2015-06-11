@@ -1,20 +1,19 @@
 package pucminas.br.cc.lddm.tp_final;
 
 import android.app.IntentService;
+import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -29,7 +28,6 @@ public class ClientService extends IntentService {
     private File fileToSend;
     private String address;
     private String data;
-
 
     public ClientService() {
         super("ClientService");
@@ -65,6 +63,15 @@ public class ClientService extends IntentService {
                     Log.d("Wp2p", e.toString());
                 }
 
+                NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);;
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
+
+                // start notification
+                mBuilder.setContentTitle("Upload file")
+                        .setContentText("Upload in progress")
+                        .setSmallIcon(R.drawable.cellphone_img);
+                mBuilder.setProgress(0, 0, true);
+
                 byte buf[] = new byte[1024];
                 //byte buf[] = new byte[4096];
                 int len;
@@ -84,6 +91,12 @@ public class ClientService extends IntentService {
                 } catch (IOException e) {
                     Log.d("Wp2p", e.toString());
                 }
+
+                mBuilder.setContentText("Upload complete");
+
+                // Removes the progress bar
+                mBuilder.setProgress(0, 0, false);
+                mNotifyManager.notify(1, mBuilder.build());
 
 //            byte[] buffer = new byte[4096];
 //
@@ -112,6 +125,8 @@ public class ClientService extends IntentService {
                 clientSocket.close();
 
                 Log.d("Wp2p", "File uploaded...");
+                Toast.makeText(getApplicationContext(), "File uploaded", Toast.LENGTH_SHORT).show();
+
 
             } catch (IOException e) {
                 Log.d("Wp2p", "Erro in Socket Client");

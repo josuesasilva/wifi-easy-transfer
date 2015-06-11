@@ -1,6 +1,5 @@
 package pucminas.br.cc.lddm.tp_final;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,6 +13,7 @@ import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,7 +22,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.io.File;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -198,8 +198,9 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
         return hasConnection;
     }
 
-    public void setProgess() {
-        mProgress = ProgressDialog.show(this, "Synchronizing peers.", "Please wait.",true);
+    public void setProgess(String title, String msg) {
+        mProgress = ProgressDialog.show(this, title, msg, true);
+        mProgress.setCancelable(true);
     }
 
     public ProgressDialog getProgress() {
@@ -216,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements WifiP2pManager.Ch
 
     public void connect() {
 
-        setProgess();
+        setProgess("Synchronizing peers.", "Please wait.");
 
         WifiP2pDevice device = mDevice;
         WifiP2pConfig config = new WifiP2pConfig();

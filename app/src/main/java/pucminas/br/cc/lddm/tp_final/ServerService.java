@@ -1,8 +1,13 @@
 package pucminas.br.cc.lddm.tp_final;
 
 import android.app.IntentService;
+import android.app.NotificationManager;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -36,6 +41,14 @@ public class ServerService extends IntentService {
         ServerSocket ss = null;
         Socket s = null;
 
+        NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);;
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
+
+        mBuilder.setContentTitle("Download file")
+                .setContentText("Download in progress")
+                .setSmallIcon(R.drawable.cellphone_img);
+
+
         Log.d("Wp2p", "Loading Sever..");
         try {
             ss = new ServerSocket(port);
@@ -57,6 +70,13 @@ public class ServerService extends IntentService {
             int c = 0;
 
             Log.d("Wp2p", "Downloading file...");
+
+            // start notification
+            mBuilder.setContentTitle("Download file")
+                    .setContentText("Download in progress")
+                    .setSmallIcon(R.drawable.cellphone_img);
+            mBuilder.setProgress(0, 0, true);
+
             while(true) {
                 bytesRead = is.read(buffer, 0, buffer.length);
 
@@ -71,7 +91,17 @@ public class ServerService extends IntentService {
 
             bos.close();
             s.close();
-            Log.d("Wp2p", "Downloading complete...");
+            ss.close();
+
+            Log.d("Wp2p", "Download complete...");
+
+            mBuilder.setContentText("Download complete");
+
+            // Removes the progress bar
+            mBuilder.setProgress(0, 0, false);
+            mNotifyManager.notify(1, mBuilder.build());
+
+            Toast.makeText(getApplicationContext(), "Download complete", Toast.LENGTH_SHORT).show();
 
         } catch (IOException e) {
             Log.d("Wp2p", "Error in Socket Server");
@@ -79,4 +109,5 @@ public class ServerService extends IntentService {
             e.printStackTrace();
         }
     }
+
 }
