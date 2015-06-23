@@ -1,4 +1,4 @@
-Informações a respeito do projeto:
+Informações a respeito do aplicativo:
 
 - Os arquivos baixados vão para a pasta "wifip2p" no cartão de memória ou na memória principal caso não possua cartão de memória.
 
@@ -9,5 +9,4 @@ Informações a respeito do projeto:
 - Dependendo do dispositivo será necessario reiniciar a aplicação ou até mesmo a conexão WiFi caso não consiga parear dois dispositivos.
 
 - Pode ser que por algum conflito ou alguma configuração do dispositivo não seja possível parear dois dispositivos.
-
 
