@@ -1,3 +1,3 @@
 # wifi-easy-transfer
 
-Share anything with Wi-Fi Peer-to-Peer in Android device.
+Share files of any sizes with Wi-Fi Peer-to-Peer in Android device
