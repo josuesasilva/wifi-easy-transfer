@@ -1,4 +1,4 @@
-package pucminas.br.cc.lddm.tp_final;
+package pucminas.br.cc.lddm.wifieasytransfer;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

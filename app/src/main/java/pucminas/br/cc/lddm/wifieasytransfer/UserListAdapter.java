@@ -1,8 +1,6 @@
-package pucminas.br.cc.lddm.tp_final;
+package pucminas.br.cc.lddm.wifieasytransfer;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +14,8 @@ import android.widget.Toast;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+
+import pucminas.br.cc.lddm.tp_final.R;
 
 public class UserListAdapter extends ArrayAdapter implements AdapterView.OnItemClickListener {
 

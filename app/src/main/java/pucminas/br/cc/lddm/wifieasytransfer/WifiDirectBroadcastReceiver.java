@@ -1,19 +1,15 @@
-package pucminas.br.cc.lddm.tp_final;
+package pucminas.br.cc.lddm.wifieasytransfer;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
-import android.net.wifi.WpsInfo;
-import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Environment;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,8 +18,6 @@ import android.widget.Toast;
 import java.io.File;
 import java.net.InetAddress;
 import java.util.Collection;
-
-import butterknife.InjectView;
 
 public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 

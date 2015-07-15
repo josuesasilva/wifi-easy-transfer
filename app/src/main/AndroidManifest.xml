@@ -15,7 +15,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_title"
         android:theme="@style/AppTheme" >
-        <activity android:name=".MainActivity"
+        <activity android:name="pucminas.br.cc.lddm.wifieasytransfer.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,11 +25,11 @@
         </activity>
 
         <service
-            android:name=".ClientService"
+            android:name="pucminas.br.cc.lddm.wifieasytransfer.ClientService"
             android:exported="false"/>
 
         <service
-            android:name=".ServerService"
+            android:name="pucminas.br.cc.lddm.wifieasytransfer.ServerService"
             android:exported="false"/>
 
     </application>

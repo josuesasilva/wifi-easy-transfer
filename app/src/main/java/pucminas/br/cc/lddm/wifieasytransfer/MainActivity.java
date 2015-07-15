@@ -1,4 +1,4 @@
-package pucminas.br.cc.lddm.tp_final;
+package pucminas.br.cc.lddm.wifieasytransfer;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -26,6 +26,7 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import pucminas.br.cc.lddm.tp_final.R;
 
 
 public class MainActivity extends AppCompatActivity implements WifiP2pManager.ChannelListener {

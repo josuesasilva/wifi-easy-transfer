@@ -1,4 +1,4 @@
-package pucminas.br.cc.lddm.tp_final;
+package pucminas.br.cc.lddm.wifieasytransfer;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -17,6 +17,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+
+import pucminas.br.cc.lddm.tp_final.R;
 
 /**
  * Created by josue on 07/06/15.
